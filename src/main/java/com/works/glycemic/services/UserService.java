@@ -5,7 +5,6 @@ import com.works.glycemic.models.User;
 import com.works.glycemic.repositories.RoleRepository;
 import com.works.glycemic.repositories.UserRepository;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -52,12 +51,13 @@ public class UserService extends SimpleUrlLogoutSuccessHandler implements UserDe
                     true,
                     getAuthorities( u.getRoles() )
             );
+            return userDetails;
         }
-        throw  new UsernameNotFoundException("User name not found!");
+        throw new UsernameNotFoundException("User name not found!");
     }
 
 
-    public User register( User us ) throws AuthenticationException {
+    public User register( User us )  {
 
         Optional<User> uOpt = uRepo.findByEmailEqualsIgnoreCase(us.getEmail());
         if ( uOpt.isPresent() ) {
@@ -89,6 +89,50 @@ public class UserService extends SimpleUrlLogoutSuccessHandler implements UserDe
         super.onLogoutSuccess(request, response, authentication);
     }
 
+    //User Register Service
+    public User userRegisterService(User user){
+
+        //User  Control
+        Optional<User> oUser = uRepo.findByEmailEqualsIgnoreCase(user.getEmail());
+        if(oUser.isPresent()){
+            return null;
+        }
+        else {
+            Optional<Role> oRole = rRepo.findById(2L);
+            if(oRole.isPresent()){
+                //Register
+                List<Role> roles = new ArrayList<>();
+                Role r = oRole.get();
+                roles.add(r);
+                user.setRoles(roles);
+
+                //email send -> enabled false
+               return register(user);
+            }
+
+        }
+
+        return  null;
+    }
+
+
+    //Admin Register Service
+    public User adminRegisterService(User user){
+
+        //User  Control
+        Optional<User> oUser = uRepo.findByEmailEqualsIgnoreCase(user.getEmail());
+        if(oUser.isPresent()){
+            return null;
+        }
+        else {
+                //Register
+                user.setRoles(rRepo.findAll());
+
+                //email send -> enabled false
+                return register(user);
+
+        }
+    }
 
 
 }
