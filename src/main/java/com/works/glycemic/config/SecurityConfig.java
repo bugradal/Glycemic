@@ -19,9 +19,24 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         auth.userDetailsService(userService).passwordEncoder(userService.encoder());
     }
 
-    // hangi yöntemle giriş yapılarak, rollere göre hangi servis kullanılcak?
+    // hangi yöntemle giriş yapılacak, rollere göre hangi servis kullanılcak?
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        http
+                .httpBasic()
+                .and()
+                .authorizeHttpRequests()
+                .antMatchers("/foods/save").hasRole("user")
+                .antMatchers("/foods/userFoodList").hasAnyRole("user","admin")
+                .antMatchers("/foods/userDeleteFood").hasAnyRole("user","admin")
+                .antMatchers("/foods/userUpdateFood").hasAnyRole("user","admin")
+                .antMatchers("/foods/list").hasAnyRole("user","global","admin")
+                .antMatchers("/register/**").permitAll()
+                .and()
+                .csrf().disable()
+                .logout().logoutUrl("/logout").invalidateHttpSession(true);
+
+
    /*     http
                 .httpBasic()
                 .and()
