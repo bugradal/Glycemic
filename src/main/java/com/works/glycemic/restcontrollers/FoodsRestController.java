@@ -27,12 +27,12 @@ public class FoodsRestController {
         if(f==null){
             hm.put(status,false);
             hm.put(message,"Bu ürün daha önce kayıt edilmiş!");
-            hm.put(status,f);
+            hm.put(result,f);
         }
         else{
             hm.put(status,true);
             hm.put(message,"Ürün kaydı başarılı!");
-            hm.put(status,f);
+            hm.put(result,f);
         }
         return hm;
     }
@@ -60,18 +60,15 @@ public class FoodsRestController {
     }
 
     //user delete food
-    @DeleteMapping("userDeleteFood/{id}")
+    @DeleteMapping("foodDelete/{id}")
     public Map<REnum,Object> userDeleteFood(@PathVariable String id){
        return foodService.userDeleteFood(id);
     }
 
-    //user delete food
-    @PutMapping("userUpdateFood")
+    //user update food
+    @PutMapping("foodUpdate")
     public Map<REnum,Object> userUpdateFood(@RequestBody Foods food){
         return foodService.userUpdateFood(food);
     }
-
-
-
 
 }

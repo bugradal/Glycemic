@@ -1,8 +1,6 @@
 package com.works.glycemic.restcontrollers;
 
 import com.works.glycemic.models.User;
-import com.works.glycemic.repositories.RoleRepository;
-import com.works.glycemic.repositories.UserRepository;
 import com.works.glycemic.services.UserService;
 import com.works.glycemic.utils.REnum;
 import lombok.AllArgsConstructor;

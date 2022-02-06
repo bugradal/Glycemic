@@ -4,6 +4,7 @@ import com.works.glycemic.models.Role;
 import com.works.glycemic.models.User;
 import com.works.glycemic.repositories.RoleRepository;
 import com.works.glycemic.repositories.UserRepository;
+import lombok.AllArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -25,15 +26,12 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@AllArgsConstructor
 @Transactional
 public class UserService extends SimpleUrlLogoutSuccessHandler implements UserDetailsService {
 
     final RoleRepository rRepo;
     final UserRepository uRepo;
-    public UserService(RoleRepository rRepo, UserRepository uRepo) {
-        this.rRepo = rRepo;
-        this.uRepo = uRepo;
-    }
 
     // User Login Method
     @Override
@@ -109,9 +107,7 @@ public class UserService extends SimpleUrlLogoutSuccessHandler implements UserDe
                 //email send -> enabled false
                return register(user);
             }
-
         }
-
         return  null;
     }
 

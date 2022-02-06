@@ -6,6 +6,8 @@ import org.springframework.data.domain.AuditorAware;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Configuration
@@ -24,6 +26,16 @@ public class AuditAwareConfig implements AuditorAware<String> {
         }
 
         return Optional.ofNullable(authentication.getName());
+    }
+
+    public List<String> getRoles(){
+        List<String> list = new ArrayList<>();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return null;
+        }
+        authentication.getAuthorities().forEach((role)->list.add(role.getAuthority()));
+        return list;
     }
 }
 
