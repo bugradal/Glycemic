@@ -4,13 +4,16 @@ import com.works.glycemic.models.Foods;
 import com.works.glycemic.services.FoodService;
 import com.works.glycemic.utils.REnum;
 import lombok.AllArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import static com.works.glycemic.utils.REnum.*;
 
+@CrossOrigin(origins = "*",allowedHeaders = "*")
 @RestController
 @AllArgsConstructor
 @RequestMapping("foods")
@@ -38,12 +41,23 @@ public class FoodsRestController {
     }
 
     //food list
+    @Cacheable("foods_list")
     @GetMapping("list")
     public Map<REnum,Object> list(){
         Map<REnum,Object> hm = new LinkedHashMap<>();
         hm.put(status,true);
         hm.put(message,"Ürün Listesi");
         hm.put(result,foodService.foodList());
+
+        return hm;
+    }
+
+    @GetMapping("adminPendingList")
+    public Map<REnum,Object> adminPendingList(){
+        Map<REnum,Object> hm = new LinkedHashMap<>();
+        hm.put(status,true);
+        hm.put(message,"Ürün Listesi");
+        hm.put(result,foodService.adminPendingList());
 
         return hm;
     }
@@ -55,7 +69,6 @@ public class FoodsRestController {
         hm.put(status,true);
         hm.put(message,"Ürün Listesi");
         hm.put(result,foodService.userFoodList());
-
         return hm;
     }
 
@@ -71,4 +84,19 @@ public class FoodsRestController {
         return foodService.userUpdateFood(food);
     }
 
+    @GetMapping("detail/{url}")
+    public Map<REnum, Object> singleFoodUrl(@PathVariable String url){
+        Map<REnum, Object> hm = new LinkedHashMap<>();
+        Optional<Foods> oFood = foodService.singleFoodUrl(url);
+        if (oFood.isPresent() ) {
+            hm.put(REnum.status, true);
+            hm.put(REnum.message, "Ürün detay alındı");
+            hm.put(REnum.result, oFood.get());
+        }else {
+            hm.put(REnum.status, false);
+            hm.put(REnum.message, "Ürün detay bulunamadı");
+            hm.put(REnum.result, null);
+        }
+        return hm;
+    }
 }

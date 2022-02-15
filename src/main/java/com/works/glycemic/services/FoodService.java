@@ -5,6 +5,8 @@ import com.works.glycemic.models.Foods;
 import com.works.glycemic.repositories.FoodRepository;
 import com.works.glycemic.utils.REnum;
 import lombok.AllArgsConstructor;
+import org.apache.commons.text.WordUtils;
+import org.springframework.cache.CacheManager;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -17,6 +19,7 @@ public class FoodService {
 
     final FoodRepository fRepo;
     final AuditAwareConfig auditAwareConfig;
+    final CacheManager cacheManager;
 
 
     //food save
@@ -25,14 +28,26 @@ public class FoodService {
         if (oFoods.isPresent()) {
             return null;
         } else {
+            if (auditAwareConfig.getRoles().contains("ROLE_admin")) {
+                foods.setEnabled(true);
+            }
             foods.setEnabled(false);
+            String foodUrl = charConvert(foods.getName());
+            foods.setUrl(foodUrl);
+            String newName = WordUtils.capitalize(foods.getName());
+            foods.setName(newName);
             return fRepo.save(foods);
         }
     }
 
     //food list
     public List<Foods> foodList() {
-        return fRepo.findAll();
+        return fRepo.findByEnabledEqualsOrderByGidDesc(true);
+    }
+
+    //admin pending list
+    public List<Foods> adminPendingList() {
+        return fRepo.findByEnabledEqualsOrderByGidDesc(false);
     }
 
     //user food list
@@ -101,34 +116,47 @@ public class FoodService {
                 //admin food update
                 if (auditAwareConfig.getRoles().contains("ROLE_admin")) {
                     userFood.setCid(food.getCid());
-                    userFood.setName(food.getName());
+
+                    String newName = WordUtils.capitalize(food.getName());
+                    userFood.setName(newName);
+
                     userFood.setGlycemicIndex(food.getGlycemicIndex());
                     userFood.setImage(food.getImage());
                     userFood.setSource(food.getSource());
                     userFood.setEnabled(food.isEnabled());
 
-                    hm.put(result, fRepo.save(userFood));
-                }
-                else {
+                    if (food.isEnabled()) {
+                        cacheManager.getCache("foods_list").clear();
+                    }
+
+                    String foodUrl = charConvert(food.getName());
+                    userFood.setUrl(foodUrl);
+
+                    hm.put(result, fRepo.saveAndFlush(userFood));
+                } else {
 
                     //user food update
-                    Optional<Foods> oFood = fRepo.findByCreatedByEqualsIgnoreCaseAndGidEquals(userName,food.getGid());
+                    Optional<Foods> oFood = fRepo.findByCreatedByEqualsIgnoreCaseAndGidEquals(userName, food.getGid());
                     if (oFood.isPresent()) {
                         userFood.setCid(food.getCid());
-                        userFood.setName(food.getName());
+
+                        String newName = WordUtils.capitalize(food.getName());
+                        userFood.setName(newName);
+
                         userFood.setGlycemicIndex(food.getGlycemicIndex());
                         userFood.setImage(food.getImage());
                         userFood.setSource(food.getSource());
 
-                        hm.put(result, fRepo.save(userFood));
-                    }
-                    else {
+                        String foodUrl = charConvert(food.getName());
+                        userFood.setUrl(foodUrl);
+
+                        hm.put(result, fRepo.saveAndFlush(userFood));
+                    } else {
                         hm.put(status, false);
                         hm.put(message, "Güncellemek istediğiniz ürün size ait değil!");
                     }
                 }
-            }
-            catch (Exception ex) {
+            } catch (Exception ex) {
                 hm.put(status, false);
                 hm.put(message, "Update işlemi sırasında bir hata oluştu!");
             }
@@ -138,6 +166,20 @@ public class FoodService {
             hm.put(message, "Bu işleme yetkiniz yok!");
         }
         return hm;
+    }
+
+    public Optional<Foods> singleFoodUrl(String url) {
+        return fRepo.findByUrlEqualsIgnoreCaseAllIgnoreCase(url);
+    }
+
+    public static String charConvert(String word) {
+        String convertWord = word.toLowerCase().trim().replaceAll("\\s+", "-");
+        char[] oldValue = new char[]{'ö', 'ü', 'ç', 'ı', 'ğ', 'ş'};
+        char[] newValue = new char[]{'o', 'u', 'c', 'i', 'g', 's'};
+        for (int count = 0; count < oldValue.length; count++) {
+            convertWord = convertWord.replace(oldValue[count], newValue[count]);
+        }
+        return convertWord;
     }
 
 }
