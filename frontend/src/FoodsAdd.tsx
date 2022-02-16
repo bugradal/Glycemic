@@ -24,15 +24,15 @@ export default function FoodsAdd() {
 
   const fncFoodAdd = () => {
 
-    if (name == '') {
+    if (name === '') {
       toast.warning('Lütfen gıda ismi alanını doldurunuz!');
-    } else if (glycemicindex == "") {
+    } else if (glycemicindex === "") {
       toast.warning('Lütfen glysemic index alanını doldurunuz!');
-    } else if (source == '') {
+    } else if (source === '') {
       toast.warning('Lütfen kaynak alanını doldurunuz!');
-    } else if (cid == "") {
+    } else if (cid === "") {
       toast.warning('Lütfen bir kategori giriniz!');
-    } else if (base64Image == '') {
+    } else if (base64Image === '') {
       toast.warning('Lütfen bir resim yükleyiniz!');
     } else {
       toast.loading("Yükleniyor.")

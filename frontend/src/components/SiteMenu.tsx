@@ -1,5 +1,5 @@
-import React, { FormEvent, useEffect, useState } from 'react'
-import { Menu, Button, Modal, Form, Icon, Segment, Label, Grid, Header, Message } from 'semantic-ui-react'
+import React, { useEffect, useState } from 'react'
+import { Menu, Button, Modal, Form, Segment, Label, Grid, Header, Message } from 'semantic-ui-react'
 import { cities } from '../Datas';
 import { IUser, UserResult } from '../models/IUser';
 import { userAndAdminLogin, logout, userRegister } from '../Services';
@@ -114,11 +114,11 @@ export default function SiteMenu() {
   let regemail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
   const login = (e: React.FormEvent) => {
     e.preventDefault()
-    if (userMail == '') {
+    if (userMail ==='') {
       toast.warning('Lütfen email alanını doldurunuz!');
     } else if (regemail.test(userMail) === false) {
       toast.warning('Lütfen geçerli bir email giriniz!')
-    } else if (userPass == '') {
+    } else if (userPass === '') {
       toast.warning('Lütfen şifre alanını doldurunuz!');
     } else {
       toast.loading("Yükleniyor.")
@@ -149,20 +149,20 @@ export default function SiteMenu() {
   const strongRegex = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})");
   const register = (e: React.FormEvent) => {
     e.preventDefault()
-    if (userName == '') {
+    if (userName === '') {
       toast.warning('Lütfen isim alanını doldurunuz!');
-    } else if (userSurname == '') {
+    } else if (userSurname === '') {
       toast.warning('Lütfen soyadı alanını doldurunuz!');
-    } else if (userPhone == '') {
+    } else if (userPhone === '') {
       toast.warning('Lütfen telefon alanını doldurunuz!');
     } else if (regphone.test(userPhone) === false) {
       toast.warning('Lütfen geçerli bir telefon numarası giriniz!');
-    } else if (userMail == '') {
+    } else if (userMail === '') {
       toast.warning('Lütfen email alanını doldurunuz!');
     } else if (regemail.test(userMail) === false) {
       toast.warning('Lütfen geçerli bir email giriniz!')
     }
-    else if (userPass == '') {
+    else if (userPass === '') {
       toast.warning('Lütfen şifre alanını doldurunuz!');
     } else if (userPass.length <= 8) {
       toast.warning('Şifre 8 karakterden kısa olamaz!');
@@ -214,6 +214,9 @@ export default function SiteMenu() {
     <>
 
       <Menu tabular>
+        <Menu.Item>
+          <img alt="logo" src='/logo.png'/>
+        </Menu.Item>
         <Menu.Item
           name='Anasayfa'
           active={activeItem === 'Anasayfa'}

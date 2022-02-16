@@ -30,7 +30,7 @@ export default function Details() {
                     {food?.image !== "" &&
                         <Image
                             floated='right'
-                            size='small'
+                            style={{marginTop:'', height:'120px'}}
                             src={food?.image}
                         />
                     }
@@ -43,7 +43,7 @@ export default function Details() {
                         />
                     }
                     <Card.Header >{food?.name} </Card.Header>
-                    <Card.Meta style={{ marginTop: '30px' }}>Glisemik İndeks: {food?.glycemicIndex}</Card.Meta>
+                    <Card.Meta style={{ marginTop: '20px' }}>Glisemik İndeks: {food?.glycemicIndex}</Card.Meta>
                     <Card.Meta style={{ marginTop: '10px' }}>Oluşturulan Kişi: {food?.createdBy === null ? 'user@mail.com' : food?.createdBy}</Card.Meta>
                     <Card.Meta style={{ marginTop: '10px' }}>Oluşturulma Tarihi: {fncDateConvert(food?.createdDate!)}</Card.Meta>
                 </Card.Content>

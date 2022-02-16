@@ -15,7 +15,7 @@ interface itemType {
 }
 
 export default function FoodsItem(props: itemType) {
-   
+
     const glycemicColor = (index: number): SemanticCOLORS => {
         var color: SemanticCOLORS = 'red'
         if (index > 0 && index < 56) {
@@ -62,37 +62,37 @@ export default function FoodsItem(props: itemType) {
 
     return (
         <Grid.Column mobile={8} tablet={8} computer={4} >
-            <Card fluid >
+            <Card>
+                {props.item.image !== "" &&
+                    <Image
+                        style={{ height: '200px' }}
+                        src={props.item.image}
+                    />
+                }
+
+                {props.item.image === "" &&
+                    <Image
+                        style={{ height: '200px' }}
+                        src='./foods.png'
+                    />
+                }
+
                 <Card.Content>
-
-                    {props.item.image !== "" &&
-                        <Image
-                            floated='right'
-                            size='tiny'
-                            src={props.item.image}
-                        />
-                    }
-
-                    {props.item.image === "" &&
-                        <Image
-                            floated='right'
-                            size='tiny'
-                            src='./foods.png'
-                        />
-                    }
-
                     {props.status &&
-                        <>
-                            <Label style={{ marginBottom: '10px' }} as='a' color={props.item.enabled === true ? 'teal' : 'yellow'} ribbon>
-                                {props.item.enabled === false && <Icon name='search'></Icon>}
-                                {props.item.enabled === true ? "Yayında" : "İnceleniyor"}
-                            </Label>
-                            <Card.Header> {props.item.name} </Card.Header>
-                        </>
+                        <div style={{ marginTop: '-15px' }}>
+                            <>
+                                <Label as='a' color={props.item.enabled === true ? 'teal' : 'yellow'} ribbon>
+                                    {props.item.enabled === false && <Icon name='search'></Icon>}
+                                    {props.item.enabled === true ? "Yayında" : "İnceleniyor"}
+                                </Label>
+                            </>
+
+                        </div>
                     }
 
-                    {!props.status && <Card.Header> {props.item.name} </Card.Header>}
-                    <div style={{ width: 50, height: 50, marginTop: '10px', marginBottom: '5px' }}>
+
+                    <Card.Header style={{ display: 'inline-block', marginTop: '15px' }}>{props.item.name}</Card.Header>
+                    <div style={{ float: 'right', width: 50, height: 50 }}>
                         {glycemicColor(props.item.glycemicIndex!) === 'green' ?
                             <CircularProgressbar styles={buildStyles({ textSize: '35px', pathColor: 'green', textColor: 'green' })} value={props.item.glycemicIndex!} text={`${props.item.glycemicIndex}`} />
                             : glycemicColor(props.item.glycemicIndex!) === 'orange' ?
@@ -100,13 +100,17 @@ export default function FoodsItem(props: itemType) {
                                 : <CircularProgressbar styles={buildStyles({ textSize: '35px', pathColor: 'red', textColor: 'red' })} value={props.item.glycemicIndex!} text={`${props.item.glycemicIndex}`} />
                         }
                     </div>
-                    <Card.Description>
-                        <Card.Meta>{props.item.createdBy === null ? 'user@mail.com' : props.item.createdBy}</Card.Meta>
-                        <Card.Meta>{fncDateConvert(props.item.createdDate!)}</Card.Meta>
-                        <Card.Meta>{categories[props.item.cid!].text}</Card.Meta>
 
-                    </Card.Description>
                 </Card.Content>
+
+
+                <Card.Content extra>
+                    <Card.Meta>Ekleyen: {props.item.createdBy === null ? 'user@mail.com' : props.item.createdBy}</Card.Meta>
+                    <Card.Meta>Eklenme Tarihi: {fncDateConvert(props.item.createdDate!)}</Card.Meta>
+                    <Card.Meta>Kategori: {categories[props.item.cid!].text}</Card.Meta>
+                </Card.Content>
+
+
                 <Card.Content extra>
                     <div className='ui two buttons'>
                         {!props.isAdmin &&
