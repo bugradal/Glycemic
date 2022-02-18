@@ -2,16 +2,18 @@
 
 
 ## Used Technologies
-|       Front-End       |       Back-End        |    
-|-----------------------|-----------------------|   
-|    React.js           |     Spring-Boot       |  
-|    TypeScript         |     Spring Security   |
-|    Semantic-ui        |     Rest API's        |    
-|                             JPA-Auditing                          
-|                             Spring Data JPA                
-|                             H2 Database       
+
+|      Back-End      |     Front-End     |  
+|--------------------|-------------------|  
+|  Spring-Boot       |  React.js 
+|  Spring Security   |  TypeScript
+|  Rest API's        |  Semantic-UI  
+|  JPA-Auditing      |                    
+|  Spring Data JPA   |             
+|  H2 Database       | 
 
 
+   
 ## Application Images
 
 - Kayıt Ol Ekranı
