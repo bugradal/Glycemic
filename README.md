@@ -1,5 +1,17 @@
 # Glycemic Index Web Project
 
+
+## Used Technologies
+|       Front-End       |       Back-End        |    
+|-----------------------|-----------------------|   
+|    React.js           |     Spring-Boot       |  
+|    TypeScript         |     Spring Security   |
+|    Semantic-ui        |     Rest API's        |    
+|                             JPA-Auditing                          
+|                             Spring Data JPA                
+|                             H2 Database       
+
+
 ## Application Images
 
 - Kayıt Ol Ekranı
